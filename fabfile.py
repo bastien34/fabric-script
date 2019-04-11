@@ -2,13 +2,15 @@
 # -*- coding: utf-8> -*-
 
 """
-Fabric is used as following:
+
+To run fabric using ``develop`` environment:
 
     > fab develop deploy
 
-Installation de fabric:
-  $ pip install fabric
-  $ pip install fabric2
+Installation:
+
+    > pip install fabric
+    > pip install fabric2
 
 """
 
