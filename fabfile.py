@@ -5,7 +5,7 @@
 
 To run fabric using ``develop`` environment:
 
-    > fab develop deploy
+    > fab develop <task>
 
 Installation:
 
@@ -17,6 +17,7 @@ Installation:
 import sys
 from fabric import (task)
 from fabric2 import Connection
+
 
 REPO_URL = "git@bitbucket.org:bastien_roques/rdt_2.0.git"
 PROJECT_NAME = 'dev_rdt2'
@@ -73,6 +74,14 @@ def migrate(ctx):
 
 
 @task
+def pipreq(ctx):
+    with get_connection(ctx) as c:
+        with c.prefix(f'source {VENV}/bin/activate'):
+            with c.cd(APP_DIR):
+                c.run("pip install -r requirements/base.txt")
+
+
+@task
 def compilemessages(ctx):
     with get_connection(ctx) as c:
         with c.cd(APP_DIR):
@@ -111,11 +120,14 @@ def status(ctx):
         c.sudo("supervisorctl status")
 
 
-# deploy task
 @task
 def deploy(ctx):
+    """
+    Main task.
+    """
     checkout(ctx)
     pull(ctx)
+    pipreq(ctx)
     migrate(ctx)
     compilemessages(ctx)
     collectstatic(ctx)
