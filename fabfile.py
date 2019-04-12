@@ -17,17 +17,18 @@ Installation:
 import sys
 from fabric import (task)
 from fabric2 import Connection
+from datetime import datetime
 
 
-REPO_URL = "git@bitbucket.org:bastien_roques/rdt_2.0.git"
-PROJECT_NAME = 'dev_rdt2'
-ROOT_DIR = '/opt/dev_rdt2'
+REPO_URL = "your_reepo"
+PROJECT_NAME = 'dev_project'
+ROOT_DIR = f'/opt/{dev_project}'
 APP_DIR = f'{ROOT_DIR}/project'
 GUNICORN_SERVICE = f'gunicorn_{PROJECT_NAME}'
 VENV = f'/opt/.virtualenvs/{PROJECT_NAME}'
-SSH_KEY = '/home/bastien/.ssh/id_rsa'
-db_name = 'rd_transcription'
-db_user = 'rdt_user'
+SSH_KEY = '%h/.ssh/id_rsa'
+db_name = 'db_name'
+db_user = 'db_user'
 
 
 def get_connection(ctx):
@@ -146,3 +147,14 @@ def dump(ctx):
     with get_connection(ctx) as c:
         c.run(f"pg_dump {db_name} -U {db_user} --no-owner --no-privileges"
               f" > /tmp/output-{db_name}.sql")
+
+ 
+@task
+def djangodump(ctx):
+    dump_name = 'rdt_front_{:%Y-%m-%d}'.format(datetime.now())
+    with get_connection(ctx) as c:
+        with c.cd(APP_DIR):
+            c.run(f"{VENV}/bin/python manage.py dumpdata > /tmp/{dump_name}.json")
+            c.get(f'/tmp/{dump_name}.json', f'dumped_data/{dump_name}.json')
+       
+        
