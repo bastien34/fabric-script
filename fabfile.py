@@ -21,17 +21,18 @@ Installation:
 import sys
 from fabric import (task)
 from fabric2 import Connection
+from datetime import datetime
 
 
-REPO_URL = "git@bitbucket.org:bastien_roques/rdt_2.0.git"
-PROJECT_NAME = 'devrdt2'
-ROOT_DIR = '/opt/dev_rdt2'
+REPO_URL = "your_reepo"
+PROJECT_NAME = 'dev_project'
+ROOT_DIR = f'/opt/{dev_project}'
 APP_DIR = f'{ROOT_DIR}/project'
 GUNICORN_SERVICE = f'gunicorn_{PROJECT_NAME}'
 VENV = f'/opt/.virtualenvs/{PROJECT_NAME}'
-SSH_KEY = '/home/bastien/.ssh/id_rsa'
-db_name = 'rdtdev'
-db_user = 'rdae93sxser'
+SSH_KEY = '%h/.ssh/id_rsa'
+db_name = 'db_name'
+db_user = 'db_user'
 BACKUP_DIR = 'front_data_backup'
 
 
